@@ -1,5 +1,6 @@
 import React from 'react'
 import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import Colors from '../constants/Color';
 import { URL } from '../services/config';
 
@@ -19,6 +20,7 @@ function MovieCard({ movie, onPress }) {
       <View style={styles.containerText}>
         <Text style={styles.movieName}>{movie.original_title}</Text>
         <Text></Text>
+        <Icon name="heart" />
       </View>
     </View>
   );

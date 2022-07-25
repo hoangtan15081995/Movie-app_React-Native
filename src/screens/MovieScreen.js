@@ -27,10 +27,11 @@ function MovieScreen({ route, navigation }) {
   
   return (
     <ScrollView style={styles.container}>
+      <Button title="Go Back" onPress={() => navigation.goBack()}></Button>
       <View style={styles.view}>
         <Text>{movieDetail.title} {movieId} </Text>
         <Image source={{uri: `${URL}${movieDetail.backdrop_path}`}} style={{width: setWidth(100), height: setHeight(30) }} />
-        <Button title="Go Back" onPress={() => navigation.goBack()}></Button>
+        {/* <Button title="Go Back" onPress={() => navigation.goBack()}></Button> */}
       </View>
     </ScrollView>
   );

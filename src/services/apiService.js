@@ -22,4 +22,14 @@ const GetMovieDetail = async (url) => {
   }
 };
 
-export {GetNowPlaying, GetMovieDetail};
+const GetMoviePopular = async url => {
+  try {
+    const GetMoviePopular = `${BASE_URL}${url}?api_key=${API_KEY}`;
+    let response = await fetch(GetMoviePopular, {method: 'GET'});
+    response = response.json();
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+export {GetNowPlaying, GetMovieDetail, GetMoviePopular};
