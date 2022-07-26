@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Dimensions, Image, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Button, Dimensions, Image, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Colors from '../constants/Color';
 import { GetMovieDetail } from '../services/apiService';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { URL } from '../services/config';
 
 const {width, height} = Dimensions.get('screen');
@@ -27,7 +28,12 @@ function MovieScreen({ route, navigation }) {
   
   return (
     <ScrollView style={styles.container}>
-      <Button title="Go Back" onPress={() => navigation.goBack()}></Button>
+      <View style={{flex: 1, flexDirection: "row"}}>
+        <TouchableOpacity style={{width: 80, height: 50, borderWidth: 1}} onPress={()=> navigation.goBack()}>
+          <Icon name="angle-left" />
+          <Text>Back</Text>
+        </TouchableOpacity>
+      </View>
       <View style={styles.view}>
         <Text>{movieDetail.title} {movieId} </Text>
         <Image source={{uri: `${URL}${movieDetail.backdrop_path}`}} style={{width: setWidth(100), height: setHeight(30) }} />

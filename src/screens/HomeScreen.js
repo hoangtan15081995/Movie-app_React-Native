@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {ScrollView, Image, Text, View, StyleSheet, FlatList, Button, TouchableOpacity, Dimensions} from 'react-native';
+import {ScrollView, Image, Text, View, StyleSheet, FlatList, Button, TouchableOpacity, Dimensions, StatusBar} from 'react-native';
 import GenreCard from '../Components/GenreCard';
 import MovieCard from '../Components/MovieCard';
 import Colors from '../constants/Color';
 import { GetNowPlaying, GetMoviePopular } from '../services/apiService';
-
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import Icon  from 'react-native-vector-icons/FontAwesome';
 // const Genres = ['All', 'Action', 'Comedy', 'Romance', 'Horror'];
 const {width} = Dimensions.get('screen');
 const setWidth = w => (width / 100) * w;
@@ -28,23 +29,16 @@ function HomeScreen({ navigation }) {
   }, []);
   return (
     <>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerTitle}>MOVIES</Text>
-      </View>
-      {/* <View>
-        <FlatList
-          data={Genres}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          renderItem={({item, index}) => (
-            <GenreCard
-              genreName={item}
-              index={index}
-              active={item === activeGenre ? true : false}
-              onPress={setActiveGenre}
-            />
-          )}
-        />
+      {/* <View style={styles.viewTop}>
+        <TouchableOpacity>
+          <Image source={require('../Images/menu.png')} style={{width: 30, height: 30}} />
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Image source={require('../Images/filter.png')} style={{width: 30, height: 30}} />
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Icon name="bars" size={30} color="#900" />
+        </TouchableOpacity>
       </View> */}
       <ScrollView style={styles.container}>
         <View>
@@ -60,14 +54,6 @@ function HomeScreen({ navigation }) {
           />
         </View>
       </ScrollView>
-      <View style={styles.footerContainer}>
-        <TouchableOpacity>
-          <Text style={styles.buttonStyle}>Home</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={styles.buttonStyle}>BookMark</Text>
-        </TouchableOpacity>
-      </View>
     </>
   );
 }
@@ -76,6 +62,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.BASIC_BACKGROUND,
+  },
+  viewTop: {
+    flex: 0.1,
+    flexDirection: 'row',
   },
   headerContainer: {
     flexDirection: 'row',
@@ -103,7 +93,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 20,
-    backgroundColor: Colors.LIGHT_GRAY
+    backgroundColor: Colors.LIGHT_GRAY,
   },
   buttonStyle: {
     color: Colors.WHITE,
