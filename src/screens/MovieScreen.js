@@ -4,6 +4,7 @@ import Colors from '../constants/Color';
 import { GetMovieDetail } from '../services/apiService';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { URL } from '../services/config';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const {width, height} = Dimensions.get('screen');
 const setWidth = w => (width / 100) * w;
@@ -18,7 +19,7 @@ function MovieScreen({ route, navigation }) {
       try {
         const response = await GetMovieDetail(`/movie/${movieId}`);
         setMovieDetail(response);
-        console.log("movieDetail",response);
+        // console.log("movieDetail",response);
       } catch (error) {
         console.log(error);
       }
@@ -27,7 +28,7 @@ function MovieScreen({ route, navigation }) {
   }, [])
   
   return (
-    <ScrollView style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={{flex: 1, flexDirection: "row"}}>
         <TouchableOpacity style={{width: 80, height: 50, borderWidth: 1}} onPress={()=> navigation.goBack()}>
           <Icon name="angle-left" />
@@ -39,7 +40,7 @@ function MovieScreen({ route, navigation }) {
         <Image source={{uri: `${URL}${movieDetail.backdrop_path}`}} style={{width: setWidth(100), height: setHeight(30) }} />
         {/* <Button title="Go Back" onPress={() => navigation.goBack()}></Button> */}
       </View>
-    </ScrollView>
+    </SafeAreaView>
   );
 }
 

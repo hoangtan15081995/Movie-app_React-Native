@@ -6,26 +6,22 @@ import Colors from '../constants/Color';
 import { GetNowPlaying, GetMoviePopular } from '../services/apiService';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon  from 'react-native-vector-icons/FontAwesome';
-// const Genres = ['All', 'Action', 'Comedy', 'Romance', 'Horror'];
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useDispatch, useSelector } from 'react-redux';
+import {getListMoviesNowPlaying} from "../redux/features/movies/movieSlice"
+
+
 const {width} = Dimensions.get('screen');
 const setWidth = w => (width / 100) * w;
 
-function HomeScreen({ navigation }) {
 
+function HomeScreen({ navigation }) {
+  const dispatch = useDispatch();
+  const { listMoviesNowPlaying, bookMarkMovies } = useSelector(state => state.movies);
+  console.log('bookMarkMovies', bookMarkMovies);
   const [active, setActive] = useState('');
-  const [movies, setMovies] = useState([]);
   useEffect(() => {
-    const getMoviesNowPlaying = async () => {
-      try {
-        const response = await GetNowPlaying('/movie/now_playing');
-        setMovies(response.results);
-          console.log(response.results);
- 
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getMoviesNowPlaying();
+      dispatch(getListMoviesNowPlaying());
   }, []);
   return (
     <>
@@ -40,10 +36,10 @@ function HomeScreen({ navigation }) {
           <Icon name="bars" size={30} color="#900" />
         </TouchableOpacity>
       </View> */}
-      <ScrollView style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <View>
           <FlatList
-            data={movies}
+            data={listMoviesNowPlaying}
             showsHorizontalScrollIndicator={false}
             renderItem={({item, index}) => (
               <MovieCard
@@ -53,7 +49,7 @@ function HomeScreen({ navigation }) {
             )}
           />
         </View>
-      </ScrollView>
+      </SafeAreaView>
     </>
   );
 }

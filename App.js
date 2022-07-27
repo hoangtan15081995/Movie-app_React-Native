@@ -9,6 +9,9 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import BookMarkScreen from './src/screens/BookMarkScreen';
+import { Provider } from 'react-redux';
+import {PersistGate} from 'redux-persist/integration/react';
+import store, { persistor } from './src/redux/store/Store';
 
 const Drawer = createDrawerNavigator();
 
@@ -33,7 +36,7 @@ function MyTabs({navigation}) {
         component={HomeScreen}
         options={{
           headerLeft: () => (
-            <TouchableOpacity onPress={() => {navigation.openDrawer()}}>
+            <TouchableOpacity>
               <Icon name="bars" size={25} color="black" style={{ marginLeft: 20 }} />
             </TouchableOpacity>
           ),
@@ -72,27 +75,31 @@ const Stack = createNativeStackNavigator();
 
 function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="HomeTabs"
-        screenOptions={{headerTitleAlign: 'center'}}>
-        <Stack.Screen
-          name="HomeTabs"
-          component={MyTabs}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="Movie"
-          component={MovieScreen}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="MyDrawer"
-          component={MyDrawer}
-          options={{headerShown: false}}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <NavigationContainer>
+          <Stack.Navigator
+            initialRouteName="HomeTabs"
+            screenOptions={{headerTitleAlign: 'center'}}>
+            <Stack.Screen
+              name="HomeTabs"
+              component={MyTabs}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="Movie"
+              component={MovieScreen}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="MyDrawer"
+              component={MyDrawer}
+              options={{headerShown: false}}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </PersistGate>
+    </Provider>
   );
 }
 

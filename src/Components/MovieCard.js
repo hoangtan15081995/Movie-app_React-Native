@@ -1,13 +1,16 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { URL } from '../services/config';
+import { useDispatch, useSelector } from 'react-redux';
 
 const { width } = Dimensions.get('screen');
 const setWidth = w => (width / 100) * w;
 
 function MovieCard({ movie, onPress }) {
-  console.log(movie)
+  const dispatch = useDispatch();
+  const [actionBookMark, setActionBookMark] = useState(false);
+  // console.log(movie)
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.containerCard} onPress={onPress}>
@@ -18,8 +21,15 @@ function MovieCard({ movie, onPress }) {
       </TouchableOpacity>
       <View style={styles.containerText}>
         <Text style={styles.movieName}>{movie.original_title}</Text>
-        <Text></Text>
-        <Icon name="heart-o" size={20} color="black" />
+        <TouchableOpacity onPress={() => {
+          setActionBookMark(!actionBookMark);
+        }}>
+          {actionBookMark ? (
+             <Icon name="heart" size={20} color="red" />
+          ): (     
+             <Icon name="heart-o" size={20} color="black" />
+          )}
+        </TouchableOpacity>
       </View>
     </View>
   );
