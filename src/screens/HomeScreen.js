@@ -1,4 +1,5 @@
-import React, {useEffect, useState} from 'react';
+<script src="http://localhost:8097"></script>;
+import React, { useEffect, useState } from 'react';
 import {ScrollView, Image, Text, View, StyleSheet, FlatList, Button, TouchableOpacity, Dimensions, StatusBar, useWindowDimensions } from 'react-native';
 import GenreCard from '../Components/GenreCard';
 import MovieCard from '../Components/MovieCard';
@@ -34,7 +35,7 @@ const UPCOMING = "UPCOMING";
 const Genres = [NOW_PLAYING, UPCOMING];
 
 function HomeScreen({ navigation }) {
-  console.log(navigation);
+  // console.log(navigation);
 
   const layout = useWindowDimensions();
   const [index, setIndex] = useState(0);
@@ -45,7 +46,7 @@ function HomeScreen({ navigation }) {
   
   const dispatch = useDispatch();
   const { listMoviesNowPlaying, listMoviesPopular } = useSelector(state => state.movies);
-  console.log("render");
+  // console.log("render");
   // console.log(listMoviesPopular || [], "UPCOMING");
   useEffect(() => {
       dispatch(getListMoviesNowPlaying());

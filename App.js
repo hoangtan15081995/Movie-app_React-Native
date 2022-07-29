@@ -8,9 +8,9 @@ import MovieScreen from './src/screens/MovieScreen';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import BookMarkScreen from './src/screens/BookMarkScreen';
-import { Provider } from 'react-redux';
+import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
-import store, { persistor } from './src/redux/store/Store';
+import store, {persistor} from './src/redux/store/Store';
 
 const Tab = createBottomTabNavigator();
 
@@ -79,7 +79,7 @@ function MyTabs({navigation}) {
 const Stack = createNativeStackNavigator();
 
 function App() {
-// persistor.purge()
+  // persistor.purge()
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
