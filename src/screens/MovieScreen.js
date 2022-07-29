@@ -29,16 +29,17 @@ function MovieScreen({ route, navigation }) {
   
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{flex: 1, flexDirection: "row"}}>
-        <TouchableOpacity style={{width: 80, height: 50, borderWidth: 1}} onPress={()=> navigation.goBack()}>
-          <Icon name="angle-left" />
-          <Text>Back</Text>
+      <View style={{flex: 0.1, flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: setWidth(100)}}>
+        <TouchableOpacity style={{width: setWidth(33.33), flexDirection: "row", justifyContent: "flex-start", alignItems: "center"}} onPress={()=> navigation.goBack()}>
+          <Icon name="angle-left" size={30} color= "black" style={{marginLeft: 5}} /> 
+          <Text style={{ color: "black", marginLeft: 5, fontSize: 17 }}>HOME</Text>
         </TouchableOpacity>
+        <Text style={{textAlign: "center", color: "black", fontSize: 17, width: setWidth(33.33)}}>Movie Detail</Text>
+        <Text style={{ textAlign: "center", width: setWidth(33.33) }}></Text>
       </View>
       <View style={styles.view}>
-        <Text>{movieDetail.title} {movieId} </Text>
+        <Text style={{ textAlign: "center", color: "black", fontSize: 17, marginBottom: 10 }}>{movieDetail.title} </Text>
         <Image source={{uri: `${URL}${movieDetail.backdrop_path}`}} style={{width: setWidth(100), height: setHeight(30) }} />
-        {/* <Button title="Go Back" onPress={() => navigation.goBack()}></Button> */}
       </View>
     </SafeAreaView>
   );
@@ -51,8 +52,9 @@ const styles = StyleSheet.create({
   },
   view: {
     flex: 1,
-    justifyContent: 'center',
+    // justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 20
   },
 });
 

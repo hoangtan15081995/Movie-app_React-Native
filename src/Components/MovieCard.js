@@ -3,14 +3,25 @@ import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'rea
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { URL } from '../services/config';
 import { useDispatch, useSelector } from 'react-redux';
+import { pushMovieToBookMark } from "../redux/features/bookMark/bookMarkSlice";
 
 const { width } = Dimensions.get('screen');
 const setWidth = w => (width / 100) * w;
 
 function MovieCard({ movie, onPress }) {
   const dispatch = useDispatch();
-  const [actionBookMark, setActionBookMark] = useState(false);
+  const { bookMarkMovies } = useSelector(state => state.bookMark);
+  let bookMark = bookMarkMovies || [];
+  // console.log(bookMark, "book")
+  let actionBookMark = bookMark.some((bookMovie) => bookMovie.id === movie.id);
+  // const [actionBookMark, setActionBookMark] = useState(false);
   // console.log(movie)
+
+  const handleBookMark = (movie) => {
+    // console.log("ok", movie);
+    dispatch(pushMovieToBookMark(movie));
+  }
+
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.containerCard} onPress={onPress}>
@@ -22,7 +33,8 @@ function MovieCard({ movie, onPress }) {
       <View style={styles.containerText}>
         <Text style={styles.movieName}>{movie.original_title}</Text>
         <TouchableOpacity onPress={() => {
-          setActionBookMark(!actionBookMark);
+          // setActionBookMark(!actionBookMark);
+          handleBookMark(movie);
         }}>
           {actionBookMark ? (
              <Icon name="heart" size={20} color="red" />

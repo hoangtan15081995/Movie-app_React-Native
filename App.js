@@ -7,22 +7,10 @@ import HomeScreen from './src/screens/HomeScreen';
 import MovieScreen from './src/screens/MovieScreen';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {createDrawerNavigator} from '@react-navigation/drawer';
 import BookMarkScreen from './src/screens/BookMarkScreen';
 import { Provider } from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import store, { persistor } from './src/redux/store/Store';
-
-const Drawer = createDrawerNavigator();
-
-function MyDrawer() {
-  return (
-    <Drawer.Navigator initialRouteName='Home' >
-      <Drawer.Screen name="Home" component={HomeScreen} />
-      {/* <Drawer.Screen name="BookMark" component={BookMarkScreen} /> */}
-    </Drawer.Navigator>
-  );
-}
 
 const Tab = createBottomTabNavigator();
 
@@ -30,22 +18,31 @@ function MyTabs({navigation}) {
   return (
     <Tab.Navigator
       initialRouteName="Home"
-      screenOptions={{headerTitleAlign: 'center'}}>
+      screenOptions={{
+        headerTitleAlign: 'center',
+      }}>
       <Tab.Screen
         name="Home"
         component={HomeScreen}
         options={{
-          headerLeft: () => (
-            <TouchableOpacity>
-              <Icon name="bars" size={25} color="black" style={{ marginLeft: 20 }} />
-            </TouchableOpacity>
-          ),
+          title: 'MOVIES',
+          headerStyle: {
+            backgroundColor: '#151C26',
+          },
+          headerTitleStyle: {
+            fontWeight: 'bold',
+            color: 'white',
+          },
           headerRight: () => (
             <TouchableOpacity>
-              <Icon name="filter" size={25} color="black" style={{ marginRight: 20 }} />
+              <Icon
+                name="cog"
+                size={30}
+                color="white"
+                style={{marginRight: 10}}
+              />
             </TouchableOpacity>
           ),
-          headerTitle: () => (<Text style={{color: "black", fontSize: 20}}>MOVIES</Text>),
           tabBarIcon: () => (
             <Image
               source={require('./src/Images/home2.png')}
@@ -58,7 +55,15 @@ function MyTabs({navigation}) {
         name="BookMark"
         component={BookMarkScreen}
         options={{
-          headerShown: false,
+          title: 'BookMark List',
+          // headerShown: false,
+          headerStyle: {
+            backgroundColor: '#151C26',
+          },
+          headerTitleStyle: {
+            fontWeight: 'bold',
+            color: 'white',
+          },
           tabBarIcon: () => (
             <Image
               source={require('./src/Images/bookmark.png')}
@@ -74,6 +79,7 @@ function MyTabs({navigation}) {
 const Stack = createNativeStackNavigator();
 
 function App() {
+// persistor.purge()
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
@@ -91,11 +97,6 @@ function App() {
               component={MovieScreen}
               options={{headerShown: false}}
             />
-            <Stack.Screen
-              name="MyDrawer"
-              component={MyDrawer}
-              options={{headerShown: false}}
-            />
           </Stack.Navigator>
         </NavigationContainer>
       </PersistGate>
@@ -103,9 +104,4 @@ function App() {
   );
 }
 
-// const headerStyle = {
-//   title: "Movies",
-//   headerStyle: { backgroundColor: Colors.BASIC_BACKGROUND },
-//   headerTitleStyle: { color: Colors.WHITE },
-// }
 export default App;
