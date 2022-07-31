@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Dimensions, Image, ImageBackground, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View, Share, Modal, Pressable } from 'react-native'
 import Colors from '../constants/Color';
-import { GetMovieDetail } from '../services/apiService';
+import { GetMovieDetail, GetVideoMovieDetail } from '../services/apiService';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { URL } from '../services/config';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -14,14 +14,29 @@ const setWidth = w => (width / 100) * w;
 const setHeight = h => (height / 100) * h;
 
 function MovieScreen({ route, navigation }) {
-  const { movieId } = route.params;
-  const [movieDetail, setMovieDetail] = useState({});
-  const [modalVisible, setModalVisible] = useState(false);
-  console.log('movieDetail', movieDetail);
   const dispatch = useDispatch(); 
   const {bookMarkMovies} = useSelector(state => state.bookMark);
   let bookMark = bookMarkMovies || [];
+  const { movieId } = route.params;
+  
+  const [movieDetail, setMovieDetail] = useState({});
+  const [videoMovieDetail, setVideoMovieDetail] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  
   let actionBookMark = bookMark.some(bookMovie => bookMovie.id === movieDetail.id);
+  const findTrailerOfficial = videoMovieDetail.find((video) => video.name === "Official Trailer");
+  // console.log('movieDetail', movieDetail);
+  // console.log('videoMovieDetail', videoMovieDetail);
+  console.log('trailerOfficial', findTrailerOfficial);
+
+  let key = "";
+  if (findTrailerOfficial) {
+   key = findTrailerOfficial.key
+  } else {
+   key = ""
+  }
+  console.log(key);
+
   useEffect(() => {
     const getMovieDetail = async () => {
       try {
@@ -32,10 +47,18 @@ function MovieScreen({ route, navigation }) {
       }
     };
     getMovieDetail();
+     const getVideoMovieDetail = async () => {
+       try {
+         const response = await GetVideoMovieDetail(`/movie/${movieId}/videos`);
+         setVideoMovieDetail(response.results);
+       } catch (error) {
+         console.log(error);
+       }
+    };
+    getVideoMovieDetail();
   }, [])
   
     const handleBookMark = movieDetail => {
-      // console.log("ok", movie);
       dispatch(pushMovieToBookMark(movieDetail));
     };
   
@@ -79,7 +102,7 @@ function MovieScreen({ route, navigation }) {
               <YoutubePlayer
                 height={setHeight(30)}
                 play={true}
-                videoId={'6JnN1DmbqoU'}
+                videoId={key}
               />
             </View>
             <TouchableOpacity

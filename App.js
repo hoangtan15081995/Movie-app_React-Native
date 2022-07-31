@@ -11,6 +11,7 @@ import BookMarkScreen from './src/screens/BookMarkScreen';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import store, {persistor} from './src/redux/store/Store';
+import SettingScreen from './src/screens/SettingScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -39,7 +40,8 @@ function MyTabs({navigation}) {
                 name="cog"
                 size={30}
                 color="white"
-                style={{marginRight: 10}}
+                style={{ marginRight: 10 }}
+                onPress = {() => navigation.navigate('Setting')}
               />
             </TouchableOpacity>
           ),
@@ -95,6 +97,11 @@ function App() {
             <Stack.Screen
               name="Movie"
               component={MovieScreen}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="Setting"
+              component={SettingScreen}
               options={{headerShown: false}}
             />
           </Stack.Navigator>
