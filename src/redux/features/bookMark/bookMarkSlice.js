@@ -21,7 +21,7 @@ const slice = createSlice({
         bookMark.splice(indexMovieExist, 1);
         state.bookMarkMovies = bookMark;
       } else {
-        bookMark.push(movie);
+        bookMark.unshift(movie);
         state.bookMarkMovies = bookMark;
       }
     },

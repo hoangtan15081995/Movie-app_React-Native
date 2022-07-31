@@ -1,8 +1,8 @@
 import { API_KEY, BASE_URL } from './config';
 
-const GetNowPlaying = async (url) => {
+const GetNowPlaying = async (url, page) => {
   try {
-    const GetNowPlaying = `${BASE_URL}${url}?api_key=${API_KEY}`;
+    const GetNowPlaying = `${BASE_URL}${url}?api_key=${API_KEY}&page=${page}`;
     let response = await fetch(GetNowPlaying, {method: 'GET'});
     response = response.json();
     return response;

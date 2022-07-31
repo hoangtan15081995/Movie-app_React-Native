@@ -8,7 +8,7 @@ import { pushMovieToBookMark } from "../redux/features/bookMark/bookMarkSlice";
 const { width } = Dimensions.get('screen');
 const setWidth = w => (width / 100) * w;
 
-function MovieCard({ movie, onPress }) {
+function MovieCard({ movie, index, onPress }) {
   const dispatch = useDispatch();
   const { bookMarkMovies } = useSelector(state => state.bookMark);
   let bookMark = bookMarkMovies || [];
@@ -27,11 +27,13 @@ function MovieCard({ movie, onPress }) {
       <TouchableOpacity style={styles.containerCard} onPress={onPress}>
         <Image
           source={{uri: `${URL}${movie.poster_path}`}}
-          style={{width: setWidth(50), height: 300, borderRadius: 20}}
+          style={{width: setWidth(50), height: 300}}
         />
       </TouchableOpacity>
       <View style={styles.containerText}>
-        <Text style={styles.movieName}>{movie.original_title}</Text>
+        <Text style={styles.movieName}> {index} - {movie.original_title}</Text>
+        <Text style={{ fontSize: 15 }}>Date: {movie.release_date} </Text>
+        <Text style={{ fontSize: 15 }}>Vote: {movie.vote_average}/10</Text>
         <TouchableOpacity onPress={() => {
           // setActionBookMark(!actionBookMark);
           handleBookMark(movie);
@@ -50,10 +52,10 @@ function MovieCard({ movie, onPress }) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    marginVertical: 10,
-    marginHorizontal: 10,
+    marginVertical: 3,
+    // marginHorizontal: 10,
+    backgroundColor: '#F0FFFF',
     width: setWidth(100),
-    
   },
   containerCard: {
     // backgroundColor: Colors.ACTIVE,
@@ -67,8 +69,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   movieName: {
-    fontSize: 20,
-    color: "black"
+    fontSize: 17,
+    fontWeight: "bold",
+    color: 'black',
   },
 });
 export default MovieCard

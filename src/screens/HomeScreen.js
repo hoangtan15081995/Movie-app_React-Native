@@ -36,7 +36,7 @@ const Genres = [NOW_PLAYING, UPCOMING];
 
 function HomeScreen({ navigation }) {
   // console.log(navigation);
-
+  const [page, setPage] = useState(1);
   const layout = useWindowDimensions();
   const [index, setIndex] = useState(0);
   const [routes] = useState([
@@ -47,11 +47,18 @@ function HomeScreen({ navigation }) {
   const dispatch = useDispatch();
   const { listMoviesNowPlaying, listMoviesPopular } = useSelector(state => state.movies);
   // console.log("render");
-  // console.log(listMoviesPopular || [], "UPCOMING");
+  console.log(listMoviesNowPlaying || [], 'nowplaying');
   useEffect(() => {
       dispatch(getListMoviesNowPlaying());
       dispatch(getMoviePopular());
   }, []);
+
+  const handleLoadMore = async() => { 
+    setPage(page + 1);
+    dispatch(getListMoviesNowPlaying(page));
+  };
+
+
   return (
     <>
       
@@ -63,15 +70,20 @@ function HomeScreen({ navigation }) {
               <View style={{flex: 1}}>
                 <FlatList
                   data={listMoviesNowPlaying}
-                  showsHorizontalScrollIndicator={false}
+                  showsVerticalScrollIndicator={false}
+                  keyExtractor={(item, index)=> index.toString()}
                   renderItem={({item, index}) => (
                     <MovieCard
                       movie={item}
+                      index = {index}
                       onPress={() =>
                         navigation.navigate('Movie', {movieId: item.id})
                       }
                     />
                   )}
+                  onEndReached={handleLoadMore}
+                  // onEndReachedThreshold={0.5}
+
                 />
               </View>
             ),
@@ -79,10 +91,12 @@ function HomeScreen({ navigation }) {
               <View style={{flex: 1}}>
                 <FlatList
                   data={listMoviesPopular}
-                  showsHorizontalScrollIndicator={false}
+                  showsVerticalScrollIndicator={false}
+                   keyExtractor={(item, index)=> index.toString()}
                   renderItem={({item, index}) => (
                     <MovieCard
                       movie={item}
+                      index = {index}
                       onPress={() =>
                         navigation.navigate('Movie', {movieId: item.id})
                       }

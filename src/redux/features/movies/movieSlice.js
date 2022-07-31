@@ -12,7 +12,14 @@ const slice = createSlice({
   initialState,
   reducers: {
     getListMoviesNowPlayingSuccess(state, action) {
-      state.listMoviesNowPlaying = action.payload;
+      const { data, page } = action.payload;
+      let listMoviesNowPlaying = state.listMoviesNowPlaying;
+      if (page >= 2) {
+        state.listMoviesNowPlaying = listMoviesNowPlaying.concat(data);
+      } else {
+        state.listMoviesNowPlaying = data;
+      }
+   
     },
     getMoviePopularSuccess(state, action) {
       state.listMoviesPopular = action.payload;
@@ -23,13 +30,13 @@ const slice = createSlice({
 
 export default slice.reducer;
 
-export const getListMoviesNowPlaying = () => async (dispatch) => {
+export const getListMoviesNowPlaying = (page) => async (dispatch) => {
   try {
-    const response = await GetNowPlaying(`/movie/now_playing`);
-      // console.log(response, "all");
-    dispatch(
-      slice.actions.getListMoviesNowPlayingSuccess(response.results),
-    );
+    const response = await GetNowPlaying(`/movie/now_playing`, page);
+      // console.log("all now playing",response);
+      dispatch(
+        slice.actions.getListMoviesNowPlayingSuccess({ data: response.results, page }),
+      );
   } catch (error) {
     console.log(error);
   }
