@@ -8,7 +8,7 @@ import { pushMovieToBookMark } from "../redux/features/bookMark/bookMarkSlice";
 const { width } = Dimensions.get('screen');
 const setWidth = w => (width / 100) * w;
 
-function MovieCard({ movie, index, onPress }) {
+function MovieCard({ movie, onPress }) {
   const dispatch = useDispatch();
   const { bookMarkMovies } = useSelector(state => state.bookMark);
   let bookMark = bookMarkMovies || [];
@@ -31,17 +31,20 @@ function MovieCard({ movie, index, onPress }) {
         />
       </TouchableOpacity>
       <View style={styles.containerText}>
-        <Text style={styles.movieName}> {index} - {movie.original_title}</Text>
-        <Text style={{ fontSize: 15 }}>Date: {movie.release_date} </Text>
-        <Text style={{ fontSize: 15 }}>Vote: {movie.vote_average}/10</Text>
-        <TouchableOpacity onPress={() => {
-          // setActionBookMark(!actionBookMark);
-          handleBookMark(movie);
-        }}>
+        <TouchableOpacity onPress={onPress}>
+          <Text style={styles.movieName}> {movie.original_title}</Text>
+        </TouchableOpacity>
+        <Text style={{fontSize: 15}}>Date: {movie.release_date} </Text>
+        <Text style={{fontSize: 15}}>Vote: {movie.vote_average}/10</Text>
+        <TouchableOpacity
+          onPress={() => {
+            // setActionBookMark(!actionBookMark);
+            handleBookMark(movie);
+          }}>
           {actionBookMark ? (
-             <Icon name="heart" size={20} color="red" />
-          ): (     
-             <Icon name="heart-o" size={20} color="black" />
+            <Icon name="heart" size={20} color="red" />
+          ) : (
+            <Icon name="heart-o" size={20} color="black" />
           )}
         </TouchableOpacity>
       </View>

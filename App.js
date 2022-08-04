@@ -26,7 +26,7 @@ function MyTabs({navigation}) {
         name="Home"
         component={HomeScreen}
         options={{
-          title: 'MOVIES',
+          title: 'HOME',
           headerStyle: {
             backgroundColor: '#151C26',
           },
@@ -40,16 +40,13 @@ function MyTabs({navigation}) {
                 name="cog"
                 size={30}
                 color="white"
-                style={{ marginRight: 10 }}
-                onPress = {() => navigation.navigate('Setting')}
+                style={{marginRight: 10}}
+                onPress={() => navigation.navigate('Setting')}
               />
             </TouchableOpacity>
           ),
-          tabBarIcon: () => (
-            <Image
-              source={require('./src/Images/home2.png')}
-              style={{width: 25, height: 25}}
-            />
+          tabBarIcon: ({color, focused}) => (
+            <Icon name="home" size={26} color={focused ? 'blue' : color} />
           ),
         }}
       />
@@ -66,11 +63,8 @@ function MyTabs({navigation}) {
             fontWeight: 'bold',
             color: 'white',
           },
-          tabBarIcon: () => (
-            <Image
-              source={require('./src/Images/bookmark.png')}
-              style={{width: 25, height: 25}}
-            />
+          tabBarIcon: ({color, focused}) => (
+            <Icon name="bookmark" size={26} color={focused ? 'blue' : color} />
           ),
         }}
       />

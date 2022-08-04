@@ -25,8 +25,8 @@ function MovieScreen({ route, navigation }) {
   
   let actionBookMark = bookMark.some(bookMovie => bookMovie.id === movieDetail.id);
   const findTrailerOfficial = videoMovieDetail.find((video) => video.name === "Official Trailer");
-  // console.log('movieDetail', movieDetail);
-  // console.log('videoMovieDetail', videoMovieDetail);
+  console.log('movieDetail', movieDetail);
+  console.log('videoMovieDetail', videoMovieDetail);
   console.log('trailerOfficial', findTrailerOfficial);
 
   let key = "";
@@ -36,6 +36,11 @@ function MovieScreen({ route, navigation }) {
    key = ""
   }
   console.log(key);
+
+  let vote = movieDetail.vote_average || 6.7;
+
+  let genres = movieDetail.genres || [{ id: 12, name: 'Adventure' }, { id: 28, name: 'Action' }, { id: 878, name: 'Science Fiction' }];
+  console.log(genres, 'genres');
 
   useEffect(() => {
     const getMovieDetail = async () => {
@@ -83,8 +88,193 @@ function MovieScreen({ route, navigation }) {
     };
   
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: 'black', opacity: modalVisible ? 0.6 : 1}}>
-      <Modal
+    <SafeAreaView
+      style={{
+        flex: 1,
+      }}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{
+          width: setWidth(100),
+          backgroundColor: 'black',
+        }}>
+        <ImageBackground
+          source={require('../Images/backgroundDetail2.jpg')}
+          resizeMode="cover"
+          style={{minHeight: setHeight(100)}}
+          imageStyle={{opacity: 0.3}}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              marginTop: 10,
+            }}>
+            <View
+              style={{
+                width: 40,
+                height: 40,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: 20,
+                marginLeft: 5,
+              }}>
+              <TouchableOpacity onPress={() =>  navigation.goBack() }>
+                <Icon name="angle-left" size={30} color="white" />
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{
+                width: 40,
+                height: 40,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: 20,
+                marginRight: 5,
+              }}>
+              <TouchableOpacity>
+                <Icon
+                  name="share-square-o"
+                  size={22}
+                  color="white"
+                  onPress={onShare}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View>
+            <YoutubePlayer height={setHeight(25)} play={true} videoId={key} />
+          </View>
+          <View style={{marginTop: 30, marginBottom: 15}}>
+            <Text
+              style={{
+                textAlign: 'center',
+                color: '#98b4d4',
+                fontSize: 30,
+                fontWeight: 'bold',
+                // paddingHorizontal: 40,
+              }}>
+              {movieDetail.title}
+            </Text>
+          </View>
+          <View>
+            <View style={{marginTop: 10}}>
+              <TouchableOpacity
+                style={{width: setWidth(20), alignItems: 'center'}}
+                onPress={() => {
+                  handleBookMark(movieDetail);
+                }}>
+                {actionBookMark ? (
+                  <Icon name="heart" size={25} color="red" />
+                ) : (
+                  <Icon name="heart-o" size={25} color="white" />
+                )}
+              </TouchableOpacity>
+            </View>
+            <View style={{marginTop: 5}}>
+              <Text
+                style={{color: 'white', fontSize: 15, paddingHorizontal: 20}}>
+                Date:{' '}
+                <Text style={{color: 'orange', fontSize: 18}}>
+                  {movieDetail.release_date}
+                </Text>
+              </Text>
+            </View>
+            <View style={{marginTop: 5}}>
+              <Text
+                style={{color: 'white', fontSize: 15, paddingHorizontal: 20}}>
+                Time:{' '}
+                <Text style={{color: 'orange', fontSize: 18}}>
+                  {movieDetail.runtime} minutes
+                </Text>
+              </Text>
+            </View>
+            <View style={{marginTop: 5}}>
+              <Text
+                style={{color: 'white', fontSize: 15, paddingHorizontal: 20}}>
+                Vote:{' '}
+                <Text style={{color: 'orange', fontSize: 18}}>
+                  {vote.toFixed(1)}/10
+                </Text>
+              </Text>
+            </View>
+            <View style={{marginTop: 5}}>
+              <Text
+                style={{color: 'white', fontSize: 15, paddingHorizontal: 20}}>
+                Genres:{' '}
+                {genres.map((genre, index) => 
+                <Text key={index} style={{ color: 'orange', fontSize: 18 }}>
+                    {genre.name} <Text>{genres.length - 1 === index ? "" : ", " }</Text>
+                </Text>
+                )}
+              </Text>
+            </View>
+          </View>
+          <View
+            style={{
+              marginTop: 20,
+              borderWidth: 1,
+              borderBottomColor: '#98b4d4',
+              marginHorizontal: setWidth(38),
+            }}>
+            <Text
+              style={{
+                textAlign: 'center',
+                color: '#98b4d4',
+                fontSize: 17,
+                fontWeight: 'bold',
+              }}>
+              {' '}
+              OVERVIEW{' '}
+            </Text>
+          </View>
+          <View style={{width: setWidth(100), marginTop: 20}}>
+            <Text
+              style={{
+                textAlign: 'justify',
+                color: 'white',
+                fontSize: 17,
+                width: setWidth(100),
+                paddingHorizontal: 20,
+              }}>
+              {movieDetail.overview}{' '}
+            </Text>
+          </View>
+        </ImageBackground>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'black',
+  },
+  view: {
+    flex: 1,
+    // justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  image: {
+    flex: 0.7,
+  },
+  viewModal: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
+
+export default MovieScreen
+
+
+
+
+
+
+ {
+   /* <Modal
         animationType="fade"
         transparent={true}
         visible={modalVisible}
@@ -98,7 +288,7 @@ function MovieScreen({ route, navigation }) {
               onPress={() => setModalVisible(!modalVisible)}>
               <Text style={{color: 'white', textAlign: 'center'}}></Text>
             </TouchableOpacity>
-            <View style={{flex: 0.3, width: setWidth(100)}}>
+            <View style={{width: setWidth(100)}}>
               <YoutubePlayer
                 height={setHeight(30)}
                 play={true}
@@ -112,8 +302,10 @@ function MovieScreen({ route, navigation }) {
             </TouchableOpacity>
           </View>
         </View>
-      </Modal>
-      <ImageBackground
+      </Modal> */
+ }
+ {
+   /* <ImageBackground
         source={{uri: `${URL}${movieDetail.poster_path}`}}
         resizeMode="cover"
         style={styles.image}
@@ -142,10 +334,12 @@ function MovieScreen({ route, navigation }) {
             />
           </TouchableOpacity>
         </View>
-      </ImageBackground>
-      <View
+      </ImageBackground> */
+ }
+ {
+   /* <View
         style={{
-          flex: 0.05,
+          // flex: 0.05,
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
@@ -171,12 +365,7 @@ function MovieScreen({ route, navigation }) {
           }}>
           {movieDetail.title}{' '}
         </Text>
-        <TouchableOpacity
-          style={{
-            width: setWidth(20),
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
+        <TouchableOpacity>
           <Icon
             name="share-square-o"
             size={25}
@@ -188,12 +377,10 @@ function MovieScreen({ route, navigation }) {
       <View style={{flex: 0.1, flexDirection: 'row', width: setWidth(100)}}>
         <View style={{flexDirection: 'column', width: setWidth(50)}}>
           <Text style={{color: 'white', fontSize: 15, width: setWidth(50)}}>
-            {' '}
-            Date: {movieDetail.release_date}{' '}
+            Date: {movieDetail.release_date}
           </Text>
           <Text style={{color: 'white', fontSize: 15, width: setWidth(50)}}>
-            {' '}
-            Time: {movieDetail.runtime} minutes{' '}
+            Time: {movieDetail.runtime} minutes
           </Text>
         </View>
         <View
@@ -216,41 +403,16 @@ function MovieScreen({ route, navigation }) {
           </View>
         </View>
       </View>
-      <View style={{flex: 0.15, width: setWidth(100)}}>
+      <View style={{ width: setWidth(100)}}>
         <Text
           style={{
             textAlign: 'justify',
             color: 'white',
-            fontSize: 13,
+            fontSize: 15,
             width: setWidth(100),
           }}>
           {' '}
           {movieDetail.overview}{' '}
         </Text>
-      </View>
-    </SafeAreaView>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'black',
-  },
-  view: {
-    flex: 1,
-    // justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  image: {
-    flex: 0.7,
-  },
-  viewModal: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
-
-export default MovieScreen
+      </View> */
+ }

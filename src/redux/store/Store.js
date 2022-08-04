@@ -11,7 +11,8 @@ import {
   REGISTER,
 } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import moviesReducer from '../features/movies/movieSlice';
+import moviesNowPlayingReducer from '../features/movies/movieNowPlayingSlice';
+import moviesPopularReducer from '../features/movies/moviePopularSlice';
 import bookMarkReducer from "../features/bookMark/bookMarkSlice";
 
 const persistConfig = {
@@ -20,8 +21,9 @@ const persistConfig = {
 };
 
 const reducer = combineReducers({
-  movies: moviesReducer,
-  bookMark: bookMarkReducer
+  moviesNowPlaying: moviesNowPlayingReducer,
+  moviesPopular: moviesPopularReducer,
+  bookMark: bookMarkReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducer);

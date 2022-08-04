@@ -33,9 +33,9 @@ const GetVideoMovieDetail = async url => {
   }
 };
 
-const GetMoviePopular = async url => {
+const GetMoviePopular = async (url, page) => {
   try {
-    const GetMoviePopular = `${BASE_URL}${url}?api_key=${API_KEY}`;
+    const GetMoviePopular = `${BASE_URL}${url}?api_key=${API_KEY}&page=${page}`;
     let response = await fetch(GetMoviePopular, {method: 'GET'});
     response = response.json();
     return response;

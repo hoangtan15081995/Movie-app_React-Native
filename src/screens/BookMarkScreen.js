@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import MovieCard from '../Components/MovieCard';
 import Colors from '../constants/Color';
 
-function BookMarkScreen() {
+function BookMarkScreen({navigation}) {
   console.log("render");
   const { bookMarkMovies } = useSelector(state => state.bookMark);
   let bookMark = bookMarkMovies || [];
@@ -20,7 +20,6 @@ function BookMarkScreen() {
             renderItem={({item, index}) => (
               <MovieCard
                 movie={item}
-                index= {index}
                 onPress={() => navigation.navigate('Movie', {movieId: item.id})}
               />
             )}
