@@ -96,54 +96,61 @@ function MovieScreen({ route, navigation }) {
         showsVerticalScrollIndicator={false}
         style={{
           width: setWidth(100),
-          backgroundColor: 'black',
+          backgroundColor: 'white',
         }}>
-        <ImageBackground
-          source={require('../Images/backgroundDetail2.jpg')}
-          resizeMode="cover"
-          style={{minHeight: setHeight(100)}}
-          imageStyle={{opacity: 0.3}}>
           <View
             style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              marginTop: 10,
+              borderWidth: 1,
+              borderColor: "black",
+              // flexDirection: 'row',
+              // justifyContent: 'space-between',
+              // marginTop: 10,
             }}>
             <View
               style={{
-                width: 40,
-                height: 40,
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderRadius: 20,
-                marginLeft: 5,
+                borderWidth: 1,
+                borderColor: "black",
+                // width: 40,
+                // height: 40,
+                // justifyContent: 'center',
+                // alignItems: 'center',
+                // borderRadius: 20,
+                // marginLeft: 5,
               }}>
               <TouchableOpacity onPress={() =>  navigation.goBack() }>
-                <Icon name="angle-left" size={30} color="white" />
+                <Icon name="angle-left" size={30} color="black" />
               </TouchableOpacity>
+              <Text>Home</Text>
+            </View>
+            <View>
+              <Text>
+                Movie Details
+              </Text>
             </View>
             <View
-              style={{
-                width: 40,
-                height: 40,
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderRadius: 20,
-                marginRight: 5,
+            style={{
+              borderWidth: 1,
+              borderColor: "black",
+                // width: 40,
+                // height: 40,
+                // justifyContent: 'center',
+                // alignItems: 'center',
+                // borderRadius: 20,
+                // marginRight: 5,
               }}>
               <TouchableOpacity>
                 <Icon
                   name="share-square-o"
                   size={22}
-                  color="white"
+                  color="black"
                   onPress={onShare}
                 />
               </TouchableOpacity>
             </View>
           </View>
-          <View>
+          {/* <View>
             <YoutubePlayer height={setHeight(25)} play={true} videoId={key} />
-          </View>
+          </View> */}
           <View style={{marginTop: 30, marginBottom: 15}}>
             <Text
               style={{
@@ -239,7 +246,6 @@ function MovieScreen({ route, navigation }) {
               {movieDetail.overview}{' '}
             </Text>
           </View>
-        </ImageBackground>
       </ScrollView>
     </SafeAreaView>
   );

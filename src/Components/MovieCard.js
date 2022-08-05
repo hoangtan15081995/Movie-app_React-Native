@@ -15,7 +15,7 @@ function MovieCard({ movie, onPress }) {
   // console.log(bookMark, "book")
   let actionBookMark = bookMark.some((bookMovie) => bookMovie.id === movie.id);
   // const [actionBookMark, setActionBookMark] = useState(false);
-  // console.log(movie)
+  console.log(movie, "movie card")
 
   const handleBookMark = (movie) => {
     // console.log("ok", movie);
@@ -24,29 +24,40 @@ function MovieCard({ movie, onPress }) {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.containerCard} onPress={onPress}>
-        <Image
-          source={{uri: `${URL}${movie.poster_path}`}}
-          style={{width: setWidth(50), height: 300}}
-        />
-      </TouchableOpacity>
-      <View style={styles.containerText}>
+      <View style={styles.containerCard}>
         <TouchableOpacity onPress={onPress}>
-          <Text style={styles.movieName}> {movie.original_title}</Text>
+          <Image
+            source={{uri: `${URL}${movie.poster_path}`}}
+            style={{width: setWidth(35), height: 200, borderRadius: 10}}
+          />
         </TouchableOpacity>
-        <Text style={{fontSize: 15}}>Date: {movie.release_date} </Text>
-        <Text style={{fontSize: 15}}>Vote: {movie.vote_average}/10</Text>
-        <TouchableOpacity
-          onPress={() => {
-            // setActionBookMark(!actionBookMark);
-            handleBookMark(movie);
-          }}>
-          {actionBookMark ? (
-            <Icon name="heart" size={20} color="red" />
-          ) : (
-            <Icon name="heart-o" size={20} color="black" />
-          )}
-        </TouchableOpacity>
+      </View>
+      <View style={styles.containerText}>
+        <View>
+          <TouchableOpacity onPress={onPress}>
+            <Text style={styles.movieName}>{movie.original_title}</Text>
+          </TouchableOpacity>
+          <Text
+            style={{ textAlign: 'left'}}>
+            {movie.release_date} | {movie.original_language.toUpperCase()}
+          </Text>
+
+          <TouchableOpacity
+            onPress={() => {
+              // setActionBookMark(!actionBookMark);
+              handleBookMark(movie);
+            }}>
+            {actionBookMark ? (
+              <Icon name="heart" size={20} color="red" />
+            ) : (
+              <Icon name="heart-o" size={20} color="black" />
+            )}
+          </TouchableOpacity>
+        </View>
+        <View>
+          <Text style={{fontSize: 15}}>Vote: {movie.vote_average}/10</Text>
+          <Text style={{fontSize: 15}}>Public</Text>
+        </View>
       </View>
     </View>
   );
@@ -55,26 +66,30 @@ function MovieCard({ movie, onPress }) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    marginVertical: 3,
-    // marginHorizontal: 10,
-    backgroundColor: '#F0FFFF',
-    width: setWidth(100),
+    // marginVertical: 20,
+    marginHorizontal: 20,
+    marginBottom: 20
+    // backgroundColor: '#F0FFFF',
+    // width: setWidth(100),
   },
   containerCard: {
     // backgroundColor: Colors.ACTIVE,
-    width: setWidth(50),
-    height: 300,
-    borderRadius: 12,
+    // width: setWidth(50),
+    // height: 300,
+    marginRight: 20
   },
   containerText: {
-    width: setWidth(45),
-    height: 300,
-    marginHorizontal: 10,
+    width: setWidth(65) - 60,
+    // height: 300,
+    // marginHorizontal: 10,
+    flexDirection: "column",
+    justifyContent: "space-between"
   },
   movieName: {
-    fontSize: 17,
+    fontSize: 18,
     fontWeight: "bold",
     color: 'black',
+    textAlign: "left"
   },
 });
 export default MovieCard
