@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Dimensions, Image, ImageBackground, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View, Share, Modal, Pressable } from 'react-native'
+import { Button, Dimensions, Image, ImageBackground, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View, Share, Modal, Pressable, FlatList } from 'react-native'
 import Colors from '../constants/Color';
-import { GetMovieDetail, GetVideoMovieDetail } from '../services/apiService';
+import {
+  GetMovieDetail,
+  GetVideoMovieDetail,
+  GetCastMovieDetail,
+} from '../services/apiService';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { URL } from '../services/config';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {useDispatch, useSelector} from 'react-redux';
 import { pushMovieToBookMark } from '../redux/features/bookMark/bookMarkSlice';
 import YoutubePlayer from 'react-native-youtube-iframe';
+import CastCard from '../Components/CastCard';
+import CompanyCard from '../Components/CompanyCard';
 
 const {width, height} = Dimensions.get('screen');
 const setWidth = w => (width / 100) * w;
@@ -21,13 +27,19 @@ function MovieScreen({ route, navigation }) {
   
   const [movieDetail, setMovieDetail] = useState({});
   const [videoMovieDetail, setVideoMovieDetail] = useState([]);
+  const [castMovieDetail, setCastMovieDetail] = useState([]);
+  const [companies, setCompanies] = useState([]);
+  const [readMore, setReadMore] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   
   let actionBookMark = bookMark.some(bookMovie => bookMovie.id === movieDetail.id);
-  const findTrailerOfficial = videoMovieDetail.find((video) => video.name === "Official Trailer");
+  const findTrailerOfficial = videoMovieDetail && videoMovieDetail.find((video) => video.name === "Official Trailer");
   console.log('movieDetail', movieDetail);
   console.log('videoMovieDetail', videoMovieDetail);
   console.log('trailerOfficial', findTrailerOfficial);
+  console.log('castMovieDetail', castMovieDetail);
+  
+  let overview = movieDetail.overview || "loading...";
 
   let key = "";
   if (findTrailerOfficial) {
@@ -41,12 +53,14 @@ function MovieScreen({ route, navigation }) {
 
   let genres = movieDetail.genres || [{ id: 12, name: 'Adventure' }, { id: 28, name: 'Action' }, { id: 878, name: 'Science Fiction' }];
   console.log(genres, 'genres');
+  let languages = movieDetail.spoken_languages || [{english_name: 'French', iso_639_1: 'fr', name: 'Français'}, {english_name: 'English', iso_639_1: 'en', name: 'English'}]
 
   useEffect(() => {
     const getMovieDetail = async () => {
       try {
         const response = await GetMovieDetail(`/movie/${movieId}`);
         setMovieDetail(response);
+        setCompanies(response.production_companies);
       } catch (error) {
         console.log(error);
       }
@@ -61,6 +75,16 @@ function MovieScreen({ route, navigation }) {
        }
     };
     getVideoMovieDetail();
+
+     const getCastMovieDetail = async () => {
+       try {
+         const response = await GetCastMovieDetail(`/movie/${movieId}/credits`);
+         setCastMovieDetail(response.cast);
+       } catch (error) {
+         console.log(error);
+       }
+    };
+    getCastMovieDetail();
   }, [])
   
     const handleBookMark = movieDetail => {
@@ -96,156 +120,407 @@ function MovieScreen({ route, navigation }) {
         showsVerticalScrollIndicator={false}
         style={{
           width: setWidth(100),
-          backgroundColor: 'white',
         }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            paddingVertical: 7,
+          }}>
           <View
             style={{
-              borderWidth: 1,
-              borderColor: "black",
-              // flexDirection: 'row',
-              // justifyContent: 'space-between',
-              // marginTop: 10,
+              width: setWidth(33.33),
+              flexDirection: 'row',
             }}>
-            <View
-              style={{
-                borderWidth: 1,
-                borderColor: "black",
-                // width: 40,
-                // height: 40,
-                // justifyContent: 'center',
-                // alignItems: 'center',
-                // borderRadius: 20,
-                // marginLeft: 5,
-              }}>
-              <TouchableOpacity onPress={() =>  navigation.goBack() }>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginLeft: 20,
+                }}>
                 <Icon name="angle-left" size={30} color="black" />
-              </TouchableOpacity>
-              <Text>Home</Text>
-            </View>
-            <View>
-              <Text>
-                Movie Details
-              </Text>
-            </View>
-            <View
+                <Text style={{color: 'black', marginLeft: 5, fontSize: 16}}>
+                  Home
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View
             style={{
-              borderWidth: 1,
-              borderColor: "black",
-                // width: 40,
-                // height: 40,
-                // justifyContent: 'center',
-                // alignItems: 'center',
-                // borderRadius: 20,
-                // marginRight: 5,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Text style={{color: 'black', fontSize: 15}}>Movie Details</Text>
+          </View>
+          <View
+            style={{
+              width: setWidth(33.3),
+              justifyContent: 'center',
+              alignItems: 'flex-end',
+            }}>
+            <TouchableOpacity
+              style={{
+                marginRight: 20,
               }}>
-              <TouchableOpacity>
+              <Icon
+                name="share-square-o"
+                size={22}
+                color="black"
+                onPress={onShare}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View>
+          {modalVisible ? (
+            <YoutubePlayer height={230} play={true} videoId={key} />
+          ) : (
+            <>
+              <Image
+                source={{uri: `${URL}${movieDetail.backdrop_path}`}}
+                style={{width: setWidth(100), height: 230}}
+              />
+              <TouchableOpacity
+                onPress={() => setModalVisible(true)}
+                style={{
+                  width: 40,
+                  height: 40,
+                  position: 'absolute',
+                  top: 95,
+                  left: setWidth(50) - 18,
+                }}>
                 <Icon
-                  name="share-square-o"
-                  size={22}
-                  color="black"
-                  onPress={onShare}
+                  name="youtube-play"
+                  size={40}
+                  color="red"
+                  style={{opacity: 0.7}}
                 />
               </TouchableOpacity>
-            </View>
-          </View>
-          {/* <View>
-            <YoutubePlayer height={setHeight(25)} play={true} videoId={key} />
-          </View> */}
-          <View style={{marginTop: 30, marginBottom: 15}}>
-            <Text
+            </>
+          )}
+        </View>
+        <View
+          style={{
+            marginTop: 8,
+            marginBottom: 25,
+            marginLeft: 20,
+            marginRight: 20,
+          }}>
+          <Text
+            style={{
+              textAlign: 'center',
+              color: 'black',
+              fontSize: 25,
+              fontWeight: 'bold',
+            }}>
+            {movieDetail.title}
+          </Text>
+        </View>
+        <View>
+          <TouchableOpacity
+            style={{width: setWidth(20), alignItems: 'center'}}
+            onPress={() => {
+              handleBookMark(movieDetail);
+            }}>
+            {actionBookMark ? (
+              <Icon name="heart" size={25} color="red" />
+            ) : (
+              <Icon name="heart-o" size={25} color="black" />
+            )}
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            width: setWidth(100),
+          }}>
+          <View
+            style={{
+              width: setWidth(33.33),
+            }}>
+            <View
               style={{
-                textAlign: 'center',
-                color: '#98b4d4',
-                fontSize: 30,
-                fontWeight: 'bold',
-                // paddingHorizontal: 40,
+                flexDirection: 'column',
+                marginLeft: 20,
               }}>
-              {movieDetail.title}
-            </Text>
-          </View>
-          <View>
-            <View style={{marginTop: 10}}>
-              <TouchableOpacity
-                style={{width: setWidth(20), alignItems: 'center'}}
-                onPress={() => {
-                  handleBookMark(movieDetail);
-                }}>
-                {actionBookMark ? (
-                  <Icon name="heart" size={25} color="red" />
-                ) : (
-                  <Icon name="heart-o" size={25} color="white" />
-                )}
-              </TouchableOpacity>
-            </View>
-            <View style={{marginTop: 5}}>
-              <Text
-                style={{color: 'white', fontSize: 15, paddingHorizontal: 20}}>
-                Date:{' '}
-                <Text style={{color: 'orange', fontSize: 18}}>
-                  {movieDetail.release_date}
-                </Text>
+              <Text style={{color: 'black', fontSize: 18, fontWeight: 'bold'}}>
+                Duration
               </Text>
-            </View>
-            <View style={{marginTop: 5}}>
-              <Text
-                style={{color: 'white', fontSize: 15, paddingHorizontal: 20}}>
-                Time:{' '}
-                <Text style={{color: 'orange', fontSize: 18}}>
-                  {movieDetail.runtime} minutes
-                </Text>
-              </Text>
-            </View>
-            <View style={{marginTop: 5}}>
-              <Text
-                style={{color: 'white', fontSize: 15, paddingHorizontal: 20}}>
-                Vote:{' '}
-                <Text style={{color: 'orange', fontSize: 18}}>
-                  {vote.toFixed(1)}/10
-                </Text>
-              </Text>
-            </View>
-            <View style={{marginTop: 5}}>
-              <Text
-                style={{color: 'white', fontSize: 15, paddingHorizontal: 20}}>
-                Genres:{' '}
-                {genres.map((genre, index) => 
-                <Text key={index} style={{ color: 'orange', fontSize: 18 }}>
-                    {genre.name} <Text>{genres.length - 1 === index ? "" : ", " }</Text>
-                </Text>
-                )}
-              </Text>
+              <Text>{movieDetail.runtime} minutes</Text>
             </View>
           </View>
           <View
             style={{
-              marginTop: 20,
-              borderWidth: 1,
-              borderBottomColor: '#98b4d4',
-              marginHorizontal: setWidth(38),
+              width: setWidth(33.33),
+              flexDirection: 'column',
             }}>
-            <Text
-              style={{
-                textAlign: 'center',
-                color: '#98b4d4',
-                fontSize: 17,
-                fontWeight: 'bold',
-              }}>
-              {' '}
-              OVERVIEW{' '}
-            </Text>
+            <View>
+              <Text
+                style={{
+                  color: 'black',
+                  fontSize: 18,
+                  fontWeight: 'bold',
+                }}>
+                Genre
+              </Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                }}>
+                <Text style={{width: setWidth(30)}}>
+                  {genres.map((genre, index) => (
+                    <>
+                      {index > 1 ? (
+                        ''
+                      ) : (
+                        <Text key={genre}>
+                          {genre.name}{' '}
+                          <Text>
+                            {index > 0 || genres.length === 1 ? '' : ', '}
+                          </Text>
+                        </Text>
+                      )}
+                    </>
+                  ))}
+                </Text>
+              </View>
+            </View>
           </View>
-          <View style={{width: setWidth(100), marginTop: 20}}>
-            <Text
+          <View
+            style={{
+              width: setWidth(33.33),
+            }}>
+            <View
               style={{
-                textAlign: 'justify',
-                color: 'white',
-                fontSize: 17,
-                width: setWidth(100),
+                flexDirection: 'column',
+                marginRight: 20,
+              }}>
+              <Text style={{color: 'black', fontSize: 18, fontWeight: 'bold'}}>
+                Language
+              </Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                }}>
+                <Text style={{width: setWidth(30)}}>
+                  {languages.map((language, index) => (
+                    <>
+                      {index > 1 ? (
+                        ''
+                      ) : (
+                        <Text key={language}>
+                          {language.english_name}{' '}
+                          <Text>
+                            {index > 0 || languages.length === 1 ? '' : ', '}
+                          </Text>
+                        </Text>
+                      )}
+                    </>
+                  ))}
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+        <View style={{width: setWidth(100), marginTop: 25}}>
+          <Text
+            style={{
+              color: 'black',
+              fontSize: 22,
+              fontWeight: 'bold',
+              marginLeft: 20,
+              marginBottom: 5,
+            }}>
+            Synopsis
+          </Text>
+          <Text
+            style={{
+              textAlign: 'justify',
+              width: setWidth(100),
+              fontSize: 15,
+              paddingHorizontal: 20,
+            }}>
+            {/* {overview} */}
+            {readMore
+              ? overview
+              : overview.length > 210
+              ? overview.slice(0, 209) + '...'
+              : overview}
+          </Text>
+          {readMore ? (
+            <TouchableOpacity
+              onPress={() => {
+                setReadMore(false);
+              }}
+              style={{
+                color: 'red',
+                fontSize: 15,
                 paddingHorizontal: 20,
+                alignItems: 'flex-end',
               }}>
-              {movieDetail.overview}{' '}
+              <Icon name="sort-asc" size={27} color="red" />
+            </TouchableOpacity>
+          ) : overview.length > 210 ? (
+            <TouchableOpacity
+              onPress={() => {
+                setReadMore(true);
+              }}>
+              <Text
+                style={{
+                  color: 'red',
+                  fontSize: 15,
+                  paddingHorizontal: 20,
+                  textAlign: 'right',
+                }}>
+                Read more
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            ''
+          )}
+        </View>
+        <View
+          style={{
+            // borderWidth: 1,
+            // borderColor: 'black',
+            flexDirection: 'column',
+            marginTop: 25,
+            marginRight: 20,
+            marginLeft: 20,
+            // height: 100,
+          }}>
+          <Text
+            style={{
+              color: 'black',
+              fontSize: 22,
+              fontWeight: 'bold',
+              marginBottom: 5,
+            }}>
+            Main Cast
+          </Text>
+          <FlatList
+            data={castMovieDetail}
+            horizontal
+            scrollEnabled={true}
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({item, index}) => <CastCard cast={item} />}
+          />
+        </View>
+        <View
+          style={{
+            // borderWidth: 1,
+            // borderColor: 'black',
+            flexDirection: 'column',
+            marginTop: 25,
+            marginRight: 20,
+            marginLeft: 20,
+            marginBottom: 30,
+            // height: 100,
+          }}>
+          <Text
+            style={{
+              color: 'black',
+              fontSize: 22,
+              fontWeight: 'bold',
+              marginBottom: 5,
+            }}>
+            Production Companies
+          </Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={{flexDirection: 'row'}}>
+            {companies &&
+              companies.map(company => {
+                if (company.logo_path !== null) {
+                  return <CompanyCard company={company} />;
+                }
+              })}
+          </ScrollView>
+        </View>
+        {/* <View>
+          <View style={{marginTop: 10}}>
+            <TouchableOpacity
+              style={{width: setWidth(20), alignItems: 'center'}}
+              onPress={() => {
+                handleBookMark(movieDetail);
+              }}>
+              {actionBookMark ? (
+                <Icon name="heart" size={25} color="red" />
+              ) : (
+                <Icon name="heart-o" size={25} color="white" />
+              )}
+            </TouchableOpacity>
+          </View>
+          <View style={{marginTop: 5}}>
+            <Text style={{color: 'white', fontSize: 15, paddingHorizontal: 20}}>
+              Date:{' '}
+              <Text style={{color: 'orange', fontSize: 18}}>
+                {movieDetail.release_date}
+              </Text>
             </Text>
           </View>
+          <View style={{marginTop: 5}}>
+            <Text style={{color: 'white', fontSize: 15, paddingHorizontal: 20}}>
+              Time:{' '}
+              <Text style={{color: 'orange', fontSize: 18}}>
+                {movieDetail.runtime} minutes
+              </Text>
+            </Text>
+          </View>
+          <View style={{marginTop: 5}}>
+            <Text style={{color: 'white', fontSize: 15, paddingHorizontal: 20}}>
+              Vote:{' '}
+              <Text style={{color: 'orange', fontSize: 18}}>
+                {vote.toFixed(1)}/10
+              </Text>
+            </Text>
+          </View>
+          <View style={{marginTop: 5}}>
+            <Text style={{color: 'white', fontSize: 15, paddingHorizontal: 20}}>
+              Genres:{' '}
+              {genres.map((genre, index) => (
+                <Text key={index} style={{color: 'orange', fontSize: 18}}>
+                  {genre.name}{' '}
+                  <Text>{genres.length - 1 === index ? '' : ', '}</Text>
+                </Text>
+              ))}
+            </Text>
+          </View>
+        </View>
+        <View
+          style={{
+            marginTop: 20,
+            borderWidth: 1,
+            borderBottomColor: '#98b4d4',
+            marginHorizontal: setWidth(38),
+          }}>
+          <Text
+            style={{
+              textAlign: 'center',
+              color: '#98b4d4',
+              fontSize: 17,
+              fontWeight: 'bold',
+            }}>
+            {' '}
+            OVERVIEW{' '}
+          </Text>
+        </View>
+        <View style={{width: setWidth(100), marginTop: 20}}>
+          <Text
+            style={{
+              textAlign: 'justify',
+              color: 'white',
+              fontSize: 17,
+              width: setWidth(100),
+              paddingHorizontal: 20,
+            }}>
+            {movieDetail.overview}{' '}
+          </Text>
+        </View> */}
       </ScrollView>
     </SafeAreaView>
   );

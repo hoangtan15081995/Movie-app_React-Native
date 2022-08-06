@@ -33,6 +33,17 @@ const GetVideoMovieDetail = async url => {
   }
 };
 
+const GetCastMovieDetail = async url => {
+  try {
+    const GetCastMovieDetail = `${BASE_URL}${url}?api_key=${API_KEY}`;
+    let response = await fetch(GetCastMovieDetail, {method: 'GET'});
+    response = response.json();
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const GetMoviePopular = async (url, page) => {
   try {
     const GetMoviePopular = `${BASE_URL}${url}?api_key=${API_KEY}&page=${page}`;
@@ -43,4 +54,10 @@ const GetMoviePopular = async (url, page) => {
     console.log(error);
   }
 };
-export {GetNowPlaying, GetMovieDetail, GetMoviePopular, GetVideoMovieDetail};
+export {
+  GetNowPlaying,
+  GetMovieDetail,
+  GetMoviePopular,
+  GetVideoMovieDetail,
+  GetCastMovieDetail,
+};

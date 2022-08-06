@@ -15,7 +15,7 @@ function MovieCard({ movie, onPress }) {
   // console.log(bookMark, "book")
   let actionBookMark = bookMark.some((bookMovie) => bookMovie.id === movie.id);
   // const [actionBookMark, setActionBookMark] = useState(false);
-  console.log(movie, "movie card")
+  // console.log(movie, "movie card")
 
   const handleBookMark = (movie) => {
     // console.log("ok", movie);
@@ -39,7 +39,7 @@ function MovieCard({ movie, onPress }) {
           </TouchableOpacity>
           <Text
             style={{ textAlign: 'left'}}>
-            {movie.release_date} | {movie.original_language.toUpperCase()}
+            {movie.release_date} | {movie.original_language}
           </Text>
 
           <TouchableOpacity
