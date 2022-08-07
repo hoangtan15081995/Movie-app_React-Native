@@ -48,7 +48,7 @@ function MovieGirdCard({movie, onPress, numColumns}) {
       </View>
       <View style={styles.containerText}>
         <View>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={onPress}>
             <Text style={styles.movieName}>{movie.original_title}</Text>
           </TouchableOpacity>
           <Text style={{textAlign: 'center'}}>

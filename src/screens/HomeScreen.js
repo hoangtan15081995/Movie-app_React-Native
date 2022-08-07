@@ -46,8 +46,7 @@ function HomeScreen() {
           name="nowPlaying"
           component={NowPlayingScreen}
           options={{
-            headerShown: false,
-            title: 'Welcome'
+            headerShown: false
           }}
         />
       </Stack.Navigator>
