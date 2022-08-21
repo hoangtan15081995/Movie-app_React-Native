@@ -3,6 +3,7 @@ import { ActivityIndicator, Dimensions, FlatList, Image, Modal, Pressable, Style
 import GirdLayout from '../Components/GirdLayout';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import NoGirdLayout from '../Components/NoGirdLayout';
+import MyLoader from '../Components/ContentLoader';
 
 const {width, height} = Dimensions.get('screen');
 const setWidth = w => (width / 100) * w;
@@ -33,7 +34,7 @@ function NowPlayingScreen({ navigation }) {
             style={{width: 22, height: 22, marginRight: 20}}
           />
         </TouchableOpacity> */}
-        {layout ? (
+        {/* {layout ? (
           <TouchableOpacity
             onPress={() => {
               navigation.navigate('noGirdLayout');
@@ -55,7 +56,14 @@ function NowPlayingScreen({ navigation }) {
               style={{width: 22, height: 22, marginRight: 20}}
             />
           </TouchableOpacity>
-        )}
+        )} */}
+        <TouchableOpacity
+        >
+          <Image
+            source={require('../Images/layout.png')}
+            style={{width: 22, height: 22, marginRight: 20}}
+          />
+        </TouchableOpacity>
       </View>
 
       <Tab.Navigator>
@@ -66,13 +74,13 @@ function NowPlayingScreen({ navigation }) {
             tabBarStyle: {display: 'none'},
           }}
         />
-        <Tab.Screen
+        {/* <Tab.Screen
           name="girdLayout"
           component={GirdLayout}
           options={{
             tabBarStyle: {display: 'none'},
           }}
-        />
+        /> */}
       </Tab.Navigator>
     </View>
   );

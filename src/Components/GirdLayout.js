@@ -10,7 +10,7 @@ const {width} = Dimensions.get('screen');
 const setWidth = w => (width / 100) * w;
 
 function GirdLayout({ navigation }) {
-  console.log(navigation, "navi")
+  // console.log(navigation, "navi")
   const numColumns = 2
   const dispatch = useDispatch();
   // const {listMoviesPopular, pageCurrentPopular} = useSelector(state => state.moviesPopular);
@@ -34,6 +34,7 @@ function GirdLayout({ navigation }) {
   const [pageNowPlaying, setPageNowPlaying] = useState(pageCurrentNowPlaying);
   const [layout, setLayout] = useState(false);
   console.log(listMoviesNowPlaying, 'listMoviesNowPlaying');
+  console.log('pageNowPlaying gird', pageNowPlaying);
 
   useEffect(() => {
     dispatch(getListMoviesNowPlaying(pageNowPlaying));

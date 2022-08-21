@@ -342,25 +342,24 @@ function MovieScreen({ route, navigation }) {
               fontSize: 15,
               paddingHorizontal: 20,
             }}>
-            {/* {overview} */}
-            {readMore
-              ? overview
-              : overview.length > 210
-              ? overview.slice(0, 209) + '...'
-              : overview}
+            {readMore ? overview   : overview.length > 210 ? overview.slice(0, 209) + '...' : overview}
           </Text>
+
           {readMore ? (
             <TouchableOpacity
               onPress={() => {
                 setReadMore(false);
-              }}
-              style={{
-                color: 'red',
-                fontSize: 15,
-                paddingHorizontal: 20,
-                alignItems: 'flex-end',
               }}>
-              <Icon name="sort-asc" size={27} color="red" />
+              {/* <Icon name="sort-asc" size={27} color="red" /> */}
+              <Text
+                style={{
+                  color: 'red',
+                  fontSize: 15,
+                  paddingHorizontal: 20,
+                  textAlign: 'right',
+                }}>
+                Read less
+              </Text>
             </TouchableOpacity>
           ) : overview.length > 210 ? (
             <TouchableOpacity
@@ -380,6 +379,7 @@ function MovieScreen({ route, navigation }) {
           ) : (
             ''
           )}
+
         </View>
         <View
           style={{
